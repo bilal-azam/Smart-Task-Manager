@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
+const redisClient = require('./redisClient');
 
 const app = express();
 const port = 5000;
