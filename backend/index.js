@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
 const redisClient = require('./redisClient');
+const taskRoutes = require('./routes/tasks');
 
 const app = express();
 const port = 5000;
@@ -12,6 +13,7 @@ app.use(express.json());
 
 // Routes
 app.use('/auth', authRoutes);
+app.use('/tasks', taskRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
