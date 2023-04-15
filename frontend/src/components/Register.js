@@ -5,21 +5,27 @@ import { useHistory } from 'react-router-dom';
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const history = useHistory();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (username === '' || password === '') {
+      setError('Both fields are required');
+      return;
+    }
     try {
       await axios.post('http://localhost:5000/auth/register', { username, password });
       history.push('/login');
     } catch (error) {
-      console.error('Registration failed:', error);
+      setError('Registration failed');
     }
   };
 
   return (
     <div>
       <h2>Register</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <input
           type="text"

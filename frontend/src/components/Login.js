@@ -6,22 +6,28 @@ import { useHistory } from 'react-router-dom';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const history = useHistory();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (username === '' || password === '') {
+      setError('Both fields are required');
+      return;
+    }
     try {
       const response = await axios.post('http://localhost:5000/auth/login', { username, password });
       login(response.data.token);
       history.push('/');
     } catch (error) {
-      console.error('Login failed:', error);
+      setError('Invalid credentials');
     }
   };
 
   return (
     <div>
       <h2>Login</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
