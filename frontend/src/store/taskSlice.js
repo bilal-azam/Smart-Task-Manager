@@ -1,46 +1,48 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getTasks, createTask, updateTask, deleteTask } from '../api/taskApi';
+import * as taskApi from '../api/taskApi';
 
 export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async () => {
-  const response = await getTasks();
+  const response = await taskApi.getTasks();
   return response.data;
 });
 
-export const addTaskAsync = createAsyncThunk('tasks/addTask', async (task) => {
-  const response = await createTask(task);
+export const addTask = createAsyncThunk('tasks/addTask', async (task) => {
+  const response = await taskApi.createTask(task);
   return response.data;
 });
 
-export const updateTaskAsync = createAsyncThunk('tasks/updateTask', async ({ id, task }) => {
-  const response = await updateTask(id, task);
+export const updateTask = createAsyncThunk('tasks/updateTask', async ({ id, task }) => {
+  const response = await taskApi.updateTask(id, task);
   return response.data;
 });
 
-export const deleteTaskAsync = createAsyncThunk('tasks/deleteTask', async (id) => {
-  await deleteTask(id);
+export const deleteTask = createAsyncThunk('tasks/deleteTask', async (id) => {
+  await taskApi.deleteTask(id);
   return id;
 });
 
-export const taskSlice = createSlice({
+const taskSlice = createSlice({
   name: 'tasks',
-  initialState: { tasks: [], status: 'idle' },
-  reducers: {},
+  initialState: {
+    tasks: [],
+    status: null,
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchTasks.fulfilled, (state, action) => {
         state.tasks = action.payload;
       })
-      .addCase(addTaskAsync.fulfilled, (state, action) => {
+      .addCase(addTask.fulfilled, (state, action) => {
         state.tasks.push(action.payload);
       })
-      .addCase(updateTaskAsync.fulfilled, (state, action) => {
-        const index = state.tasks.findIndex(task => task._id === action.payload._id);
+      .addCase(updateTask.fulfilled, (state, action) => {
+        const index = state.tasks.findIndex((task) => task._id === action.payload._id);
         if (index !== -1) {
           state.tasks[index] = action.payload;
         }
       })
-      .addCase(deleteTaskAsync.fulfilled, (state, action) => {
-        state.tasks = state.tasks.filter(task => task._id !== action.payload);
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        state.tasks = state.tasks.filter((task) => task._id !== action.payload);
       });
   },
 });
