@@ -7,16 +7,24 @@ const AddTaskForm = () => {
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [priority, setPriority] = useState('Medium');
+  const [message, setMessage] = useState('');
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (title) {
-      dispatch(addTask({ title, description, dueDate, priority }));
-      setTitle('');
-      setDescription('');
-      setDueDate('');
-      setPriority('Medium');
+      try {
+        await dispatch(addTask({ title, description, dueDate, priority }));
+        setMessage('Task added successfully!');
+        setTitle('');
+        setDescription('');
+        setDueDate('');
+        setPriority('Medium');
+      } catch (error) {
+        setMessage('Failed to add task.');
+      }
+    } else {
+      setMessage('Title is required.');
     }
   };
 
@@ -46,6 +54,7 @@ const AddTaskForm = () => {
         <option value="Low">Low</option>
       </select>
       <button type="submit">Add Task</button>
+      {message && <p>{message}</p>}
     </form>
   );
 };
