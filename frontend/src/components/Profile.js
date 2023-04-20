@@ -4,7 +4,10 @@ import { isAuthenticated } from '../utils/auth';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [editMode, setEditMode] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -13,8 +16,10 @@ const Profile = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         setUser(response.data);
+        setUsername(response.data.username);
+        setEmail(response.data.email);
       } catch (error) {
-        setError('Failed to load profile');
+        setMessage('Failed to load profile');
       }
     };
 
@@ -23,15 +28,51 @@ const Profile = () => {
     }
   }, []);
 
+  const handleSave = async () => {
+    try {
+      const response = await axios.put(
+        'http://localhost:5000/user/profile',
+        { username, email },
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+      );
+      setUser(response.data);
+      setEditMode(false);
+      setMessage('Profile updated successfully!');
+    } catch (error) {
+      setMessage('Failed to update profile');
+    }
+  };
+
   return (
     <div>
       <h2>Profile</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {message && <p>{message}</p>}
       {user ? (
         <div>
-          <p>Username: {user.username}</p>
-          <p>Email: {user.email}</p>
-          <p>Joined: {new Date(user.createdAt).toLocaleDateString()}</p>
+          {editMode ? (
+            <div>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Username"
+              />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+              />
+              <button onClick={handleSave}>Save</button>
+              <button onClick={() => setEditMode(false)}>Cancel</button>
+            </div>
+          ) : (
+            <div>
+              <p>Username: {user.username}</p>
+              <p>Email: {user.email}</p>
+              <button onClick={() => setEditMode(true)}>Edit Profile</button>
+            </div>
+          )}
         </div>
       ) : (
         <p>Loading...</p>
