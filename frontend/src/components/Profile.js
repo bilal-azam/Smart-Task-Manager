@@ -1,44 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { isAuthenticated } from '../utils/auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserProfile, updateUserProfile } from '../store/userSlice';
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+  const { user, status, error } = useSelector((state) => state.user);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [editMode, setEditMode] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/user/profile', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-        });
-        setUser(response.data);
-        setUsername(response.data.username);
-        setEmail(response.data.email);
-      } catch (error) {
-        setMessage('Failed to load profile');
-      }
-    };
-
-    if (isAuthenticated()) {
-      fetchUserProfile();
+    if (status === 'idle') {
+      dispatch(fetchUserProfile());
     }
-  }, []);
+  }, [dispatch, status]);
+
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+      setEmail(user.email);
+    }
+  }, [user]);
 
   const handleSave = async () => {
     try {
-      const response = await axios.put(
-        'http://localhost:5000/user/profile',
-        { username, email },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
-      );
-      setUser(response.data);
+      await dispatch(updateUserProfile({ username, email }));
       setEditMode(false);
       setMessage('Profile updated successfully!');
-    } catch (error) {
+    } catch {
       setMessage('Failed to update profile');
     }
   };
@@ -47,35 +37,38 @@ const Profile = () => {
     <div>
       <h2>Profile</h2>
       {message && <p>{message}</p>}
-      {user ? (
-        <div>
-          {editMode ? (
-            <div>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
-              />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-              />
-              <button onClick={handleSave}>Save</button>
-              <button onClick={() => setEditMode(false)}>Cancel</button>
-            </div>
-          ) : (
-            <div>
-              <p>Username: {user.username}</p>
-              <p>Email: {user.email}</p>
-              <button onClick={() => setEditMode(true)}>Edit Profile</button>
-            </div>
-          )}
-        </div>
-      ) : (
+      {error && <p>{error}</p>}
+      {status === 'loading' ? (
         <p>Loading...</p>
+      ) : (
+        user && (
+          <div>
+            {editMode ? (
+              <div>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Username"
+                />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email"
+                />
+                <button onClick={handleSave}>Save</button>
+                <button onClick={() => setEditMode(false)}>Cancel</button>
+              </div>
+            ) : (
+              <div>
+                <p>Username: {user.username}</p>
+                <p>Email: {user.email}</p>
+                <button onClick={() => setEditMode(true)}>Edit Profile</button>
+              </div>
+            )}
+          </div>
+        )
       )}
     </div>
   );
