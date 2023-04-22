@@ -5,6 +5,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Profile from './components/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
+import TaskDetail from './components/TaskDetail';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <div className="App">
         <Switch>
           <ProtectedRoute exact path="/" component={TaskList} />
+          <ProtectedRoute path="/tasks/:id" element={<TaskDetail />} />
           <ProtectedRoute path="/profile" component={Profile} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
