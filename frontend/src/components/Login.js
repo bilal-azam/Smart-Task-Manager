@@ -1,25 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { login } from '../utils/auth';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (username === '' || password === '') {
-      setError('Both fields are required');
-      return;
-    }
     try {
-      const response = await axios.post('http://localhost:5000/auth/login', { username, password });
-      login(response.data.token);
-      history.push('/');
-    } catch (error) {
+      const response = await axios.post('http://localhost:5000/auth/login', { email, password });
+      localStorage.setItem('token', response.data.token);
+      navigate('/');
+    } catch (err) {
       setError('Invalid credentials');
     }
   };
@@ -27,19 +22,21 @@ const Login = () => {
   return (
     <div>
       <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
+      {error && <p>{error}</p>}
+      <form onSubmit={handleLogin}>
         <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          required
         />
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
+          required
         />
         <button type="submit">Login</button>
       </form>
