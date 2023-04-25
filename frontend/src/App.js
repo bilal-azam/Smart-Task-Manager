@@ -1,7 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
 import TaskList from './components/TaskList';
 import Login from './components/Login';
+import Logout from './components/Logout';
 import Register from './components/Register';
 import Profile from './components/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -10,14 +12,18 @@ import TaskDetail from './components/TaskDetail';
 function App() {
   return (
     <Router>
-      <div className="App">
-        <Switch>
-          <ProtectedRoute exact path="/" component={TaskList} />
-          <ProtectedRoute path="/tasks/:id" element={<TaskDetail />} />
-          <ProtectedRoute path="/profile" component={Profile} />
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-        </Switch>
+      <Navbar />
+      <div>
+        <Routes>
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/" element={<ProtectedRoute />}>
+            <Route path="/" element={<TaskList />} />
+            <Route path="/tasks/:id" element={<TaskDetail />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+        </Routes>
       </div>
     </Router>
   );
