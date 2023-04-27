@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchTasks } from '../store/taskSlice';
 import TaskItem from './TaskItem';
 import AddTaskForm from './AddTaskForm';
+import { sendNotification } from '../utils/notification';
 
 const TaskList = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,16 @@ const TaskList = () => {
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
+
+  useEffect(() => {
+    const now = new Date();
+    tasks.forEach((task) => {
+      const dueDate = new Date(task.dueDate);
+      if (dueDate > now && dueDate <= now.setDate(now.getDate() + 3)) {
+        sendNotification(`Task "${task.title}" is due soon!`);
+      }
+    });
+  }, [tasks]);
 
   const filteredTasks = tasks.filter((task) => {
     if (filter === 'All') return true;
