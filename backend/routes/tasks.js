@@ -9,9 +9,21 @@ router.post('/', async (req, res) => {
   res.status(201).send(task);
 });
 
-router.get('/', async (req, res) => {
-  const tasks = await Task.find();
-  res.send(tasks);
+router.get('/', auth, async (req, res) => {
+  try {
+    const cacheKey = 'tasks';
+    redisClient.get(cacheKey, async (err, tasks) => {
+      if (tasks) {
+        return res.json(JSON.parse(tasks));
+      } else {
+        const allTasks = await Task.find();
+        redisClient.setex(cacheKey, 3600, JSON.stringify(allTasks));
+        res.json(allTasks);
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ msg: 'Server error' });
+  }
 });
 
 router.put('/:id', async (req, res) => {
