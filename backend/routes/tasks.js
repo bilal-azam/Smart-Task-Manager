@@ -26,14 +26,40 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
-  const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  res.send(task);
+router.put('/:id', auth, async (req, res) => {
+  try {
+    const { title, description, dueDate, priority } = req.body;
+    const updatedTask = await Task.findByIdAndUpdate(
+      req.params.id,
+      { title, description, dueDate, priority },
+      { new: true }
+    );
+
+    if (!updatedTask) return res.status(404).json({ msg: 'Task not found' });
+
+    // Invalidate cache
+    redisClient.del('tasks');
+
+    res.json(updatedTask);
+  } catch (err) {
+    res.status(500).json({ msg: 'Server error' });
+  }
 });
 
-router.delete('/:id', async (req, res) => {
-  await Task.findByIdAndDelete(req.params.id);
-  res.status(204).send();
+// Delete task
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const deletedTask = await Task.findByIdAndDelete(req.params.id);
+
+    if (!deletedTask) return res.status(404).json({ msg: 'Task not found' });
+
+    // Invalidate cache
+    redisClient.del('tasks');
+
+    res.json({ msg: 'Task deleted' });
+  } catch (err) {
+    res.status(500).json({ msg: 'Server error' });
+  }
 });
 
 module.exports = router;
