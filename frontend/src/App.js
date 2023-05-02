@@ -4,6 +4,7 @@ import TaskList from './components/TaskList';
 import TaskDetail from './components/TaskDetail';
 import UpdateTask from './components/UpdateTask';
 import Profile from './components/Profile';
+import EditProfile from './components/EditProfile';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import Register from './components/Register';
@@ -24,6 +25,7 @@ function App() {
             <Route path="/tasks/:id" element={<TaskDetail />} />
             <Route path="/tasks/:id/update" element={<UpdateTask />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/edit" element={<EditProfile />} />
           </Route>
         </Routes>
       </div>

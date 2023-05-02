@@ -42,4 +42,22 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// Update user profile route
+router.put('/profile', auth, async (req, res) => {
+  const { username, email, role } = req.body;
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ msg: 'User not found' });
+
+    if (username) user.username = username;
+    if (email) user.email = email;
+    if (role) user.role = role;
+
+    await user.save();
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
 module.exports = router;
