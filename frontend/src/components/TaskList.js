@@ -6,6 +6,7 @@ import AddTaskForm from './AddTaskForm';
 import { sendNotification } from '../utils/notification';
 
 const TaskList = () => {
+  const [searchQuery, setSearchQuery] = useState('');
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks.tasks);
   const [filter, setFilter] = useState('All');
@@ -47,6 +48,15 @@ const TaskList = () => {
     return 0;
   });
 
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/tasks/search?query=${searchQuery}`);
+      dispatch(fetchTasks(response.data));
+    } catch (err) {
+      console.error('Error searching tasks:', err);
+    }
+  };
+
   return (
     <div>
       <h2>Task List</h2>
@@ -62,6 +72,13 @@ const TaskList = () => {
           <option value="Due Date">Due Date</option>
           <option value="Priority">Priority</option>
         </select>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search tasks"
+        />
+        <button onClick={handleSearch}>Search</button>
       </div>
       <AddTaskForm />
       <ul>

@@ -62,4 +62,20 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
+// Search tasks
+router.get('/search', auth, async (req, res) => {
+  const { query } = req.query;
+  try {
+    const allTasks = await Task.find({
+      $or: [
+        { title: { $regex: query, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } }
+      ]
+    });
+    res.json(allTasks);
+  } catch (err) {
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
 module.exports = router;
