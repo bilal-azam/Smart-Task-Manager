@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { deleteTaskAsync, updateTaskAsync } from '../store/taskSlice';
+import { ListGroup } from 'react-bootstrap';
 
 const TaskItem = ({ task }) => {
   const dispatch = useDispatch();
@@ -14,15 +15,10 @@ const TaskItem = ({ task }) => {
   };
 
   return (
-    <li>
-      <input
-        type="checkbox"
-        checked={task.completed}
-        onChange={toggleCompletion}
-      />
-      {task.title}
+    <ListGroup.Item>
+      <a href={`/tasks/${task._id}`}>{task.title}</a>
       <button onClick={handleDelete}>Delete</button>
-    </li>
+    </ListGroup.Item>
   );
 };
 

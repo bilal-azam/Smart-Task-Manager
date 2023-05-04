@@ -4,6 +4,7 @@ import { fetchTasks } from '../store/taskSlice';
 import TaskItem from './TaskItem';
 import AddTaskForm from './AddTaskForm';
 import { sendNotification } from '../utils/notification';
+import { Container, Form, Button, ListGroup } from 'react-bootstrap';
 
 const TaskList = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -58,7 +59,7 @@ const TaskList = () => {
   };
 
   return (
-    <div>
+    <Container>
       <h2>Task List</h2>
       <div>
         <label>Filter:</label>
@@ -72,21 +73,25 @@ const TaskList = () => {
           <option value="Due Date">Due Date</option>
           <option value="Priority">Priority</option>
         </select>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search tasks"
-        />
-        <button onClick={handleSearch}>Search</button>
+        <Form className="mb-4">
+          <Form.Group controlId="searchQuery">
+            <Form.Control
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search tasks"
+            />
+          </Form.Group>
+          <Button variant="primary" onClick={handleSearch}>Search</Button>
+        </Form>
       </div>
       <AddTaskForm />
-      <ul>
+      <ListGroup>
         {sortedTasks.map((task) => (
           <TaskItem key={task._id} task={task} />
         ))}
-      </ul>
-    </div>
+      </ListGroup>
+    </Container>
   );
 };
 
