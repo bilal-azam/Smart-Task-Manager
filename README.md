@@ -13,3 +13,21 @@ Smart Task Manager is a modern task management application designed to help you 
 - **Search & Filter**: Quickly find tasks using search and filter options.
 - **User Authentication**: Secure your tasks with user authentication and manage them across devices.
 
+## Technologies Used
+
+- **Frontend**: [React](https://reactjs.org/), [Bootstrap](https://getbootstrap.com/)
+- **Backend**: [Node.js](https://nodejs.org/), [Express.js](https://expressjs.com/)
+- **Database**: [MongoDB](https://www.mongodb.com/)
+- **Authentication**: [JWT](https://jwt.io/)
+
+## Installation
+
+To get started with Smart Task Manager, follow these steps:
+
+### 1. **Clone the Repository**
+
+```
+   git clone https://github.com/bilal-azam/Smart-Task-Manager.git
+   cd Smart-Task-Manager
+```
+
