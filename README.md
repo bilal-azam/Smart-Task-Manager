@@ -31,3 +31,39 @@ To get started with Smart Task Manager, follow these steps:
    cd Smart-Task-Manager
 ```
 
+### 2. Set Up Backend
+Navigate to the backend directory:
+```
+cd backend
+```
+Install dependencies:
+```
+npm install
+```
+Create a .env file in the backend directory and add your environment variables (e.g., MongoDB connection string):
+```
+MONGODB_URI=your-mongodb-uri
+JWT_SECRET=your-jwt-secret
+```
+Start the backend server:
+```
+npm start
+```
+
+### 3. Set Up Frontend
+Navigate to the frontend directory:
+```
+cd ../frontend
+```
+Install dependencies:
+```
+npm install
+```
+Start the frontend development server:
+```
+npm start
+```
+
+### 4. Access the Application
+Open your browser and navigate to http://localhost:3000 to start using the Smart Task Manager.
+
