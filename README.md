@@ -81,3 +81,14 @@ We welcome contributions to improve Smart Task Manager! To contribute:
 4. Push to the branch (git push origin feature/YourFeature).
 5. Open a Pull Request.
 
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Contact
+For any questions or support, please contact me at [bilal.azam1@outlook.com].
+
+## Acknowledgements
+1. React
+2. Node.js
+3. MongoDB
+4. Bootstrap
