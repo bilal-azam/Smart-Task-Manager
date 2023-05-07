@@ -67,3 +67,17 @@ npm start
 ### 4. Access the Application
 Open your browser and navigate to http://localhost:3000 to start using the Smart Task Manager.
 
+## Usage
+1. Create Tasks: Click on the "Add Task" button and fill in the details.
+2. Manage Tasks: Use the sidebar to filter tasks by category or priority.
+3. Set Reminders: Add due dates to tasks and enable reminders.
+4. Search: Use the search bar to find specific tasks quickly.
+
+## Contributing
+We welcome contributions to improve Smart Task Manager! To contribute:
+1. Fork the repository.
+2. Create a new branch (git checkout -b feature/YourFeature).
+3. Make your changes and commit them (git commit -am 'Add new feature').
+4. Push to the branch (git push origin feature/YourFeature).
+5. Open a Pull Request.
+
